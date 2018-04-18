@@ -1,2 +1,5 @@
 # All macOS File data
 .DS_Store
+
+vue/node-modules
+node-modules
