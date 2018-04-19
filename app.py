@@ -19,3 +19,4 @@ def catch_all(path):
     if app.debug:
         return requests.get('http://localhost:3000/{}'.format(path)).text
     return render_template("index.html")
+    
