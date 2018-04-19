@@ -3,8 +3,8 @@ import requests
 
 
 app = Flask(__name__,
-            static_folder = "./client/dist/static",
-            template_folder = "./client/dist")
+            static_folder = "../client/dist/static",
+            template_folder = "../client/dist")
 
 
 @app.route('/')
