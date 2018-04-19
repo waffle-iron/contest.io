@@ -1,13 +1,16 @@
 # All macOS File data
 .DS_Store
 
+# node (logs, build files)
 *node_modules
-
 client/dist
-
 *yarn-error.log
 *package-lock.json
 
-venv/
+# configs
 .vscode/
+
+# python data
+venv/
 __pycache__/
+*.egg-info/
