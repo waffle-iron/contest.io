@@ -3641,6 +3641,10 @@ jsbn@~0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
 
+jsdoc-vue@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/jsdoc-vue/-/jsdoc-vue-1.0.0.tgz#ff3ac1ba6bc4a74079bb79058a7bf0066e346235"
+
 jsesc@^2.5.1:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.1.tgz#e421a2a8e20d6b0819df28908f782526b96dd1fe"
@@ -6343,7 +6347,7 @@ vue-style-loader@^4.0.1:
     hash-sum "^1.0.2"
     loader-utils "^1.0.2"
 
-vue-template-compiler@^2.5.13:
+vue-template-compiler@^2.5.13, vue-template-compiler@^2.5.16:
   version "2.5.16"
   resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.16.tgz#93b48570e56c720cdf3f051cc15287c26fbd04cb"
   dependencies:
