@@ -10,12 +10,12 @@ app = Flask(__name__,
 @app.route('/')
 def index():
     if app.debug:
-        return requests.get('http://localhost:8081/index.html').text
+        return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
     if app.debug:
-        return requests.get('http://localhost:8081/{}'.format(path)).text
+        return requests.get('http://localhost:3000/{}'.format(path)).text
     return render_template("index.html")
