@@ -2,7 +2,7 @@
   <div id="navbar">
 
     <!-- Toolbar -->
-    <md-toolbar>
+    <md-toolbar class="md-accent">
 
       <!-- Title -->
       <h3 class="md-title" style="flex: 1">Title</h3>
