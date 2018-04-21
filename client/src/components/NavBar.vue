@@ -2,27 +2,20 @@
   <div id="navbar">
 
     <!-- Toolbar -->
-    <md-toolbar class="md-accent">
+    <v-toolbar>
+      <!-- Side Bar Icon -->
+      <v-toolbar-side-icon></v-toolbar-side-icon>
 
-      <!-- Title -->
-      <h3 class="md-title" style="flex: 1">Title</h3>
+      <v-toolbar-title>Contest.io</v-toolbar-title>
 
-      <!-- Dropdown -->
-      <md-menu>
-        <md-button class="md-icon-button" md-menu-trigger>
-          <md-icon>more_vert</md-icon>
-        </md-button>
-        <!-- Dropdown content -->
+      <v-spacer></v-spacer>
 
-        <md-menu-content>
-          <md-menu-item>
-            <router-link :to="{ name: '', params: {} }">Login</router-link>
-          </md-menu-item>
-        </md-menu-content>
+      <v-toolbar-items class="hidden-sm-and-down">
+        <v-btn flat>Dashboard</v-btn>
+        <v-btn flat>Login</v-btn>
+      </v-toolbar-items>
 
-      </md-menu>
-
-    </md-toolbar>
+    </v-toolbar>
 
   </div>
 </template>
@@ -38,7 +31,5 @@ export default {
 </script>
 
 <style scoped>
-  .md-toolbar {
-    margin-top: 16px;
-  }
+
 </style>

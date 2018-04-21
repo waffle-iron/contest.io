@@ -2,14 +2,12 @@ import Vue from 'vue'
 import App from './App.vue'
 import Router from 'vue-router'
 
-// Vue Material
-import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
-// Theme
-import 'vue-material/dist/theme/default.css' // This line here
+// Import Vuetify
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css' // Ensure you are using css-loader
 
-// Use Vue Material
-Vue.use(VueMaterial)
+// Use Vuetify
+Vue.use(Vuetify)
 
 // router
 Vue.use(Router)

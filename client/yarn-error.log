@@ -1,5 +1,5 @@
 Arguments: 
-  /usr/local/bin/node /usr/local/bin/yarn install vue-material
+  /usr/local/bin/node /usr/local/bin/yarn add element.io
 
 PATH: 
   /Users/quentin/mongodb/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin:/usr/local/share/dotnet:/Library/Frameworks/Mono.framework/Versions/Current/Commands
@@ -24,13 +24,16 @@ npm manifest:
       "lint": "vue-cli-service lint"
     },
     "dependencies": {
-      "vue": "^2.5.13"
+      "vue": "^2.5.13",
+      "vue-material": "^1.0.0-beta-8",
+      "vue-router": "^3.0.1"
     },
     "devDependencies": {
       "@vue/cli-plugin-babel": "^3.0.0-beta.6",
       "@vue/cli-plugin-eslint": "^3.0.0-beta.6",
       "@vue/cli-service": "^3.0.0-beta.6",
-      "vue-template-compiler": "^2.5.13"
+      "jsdoc-vue": "^1.0.0",
+      "vue-template-compiler": "^2.5.16"
     },
     "babel": {
       "presets": [
@@ -3703,6 +3706,10 @@ Lockfile:
     version "0.1.1"
     resolved "https://registry.yarnpkg.com/jsbn/-/jsbn-0.1.1.tgz#a5e654c2e5a2deb5f201d96cefbca80c0ef2f513"
   
+  jsdoc-vue@^1.0.0:
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/jsdoc-vue/-/jsdoc-vue-1.0.0.tgz#ff3ac1ba6bc4a74079bb79058a7bf0066e346235"
+  
   jsesc@^2.5.1:
     version "2.5.1"
     resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-2.5.1.tgz#e421a2a8e20d6b0819df28908f782526b96dd1fe"
@@ -6390,6 +6397,14 @@ Lockfile:
       vue-style-loader "^4.0.1"
       vue-template-es2015-compiler "^1.6.0"
   
+  vue-material@^1.0.0-beta-8:
+    version "1.0.0-beta-8"
+    resolved "https://registry.yarnpkg.com/vue-material/-/vue-material-1.0.0-beta-8.tgz#88b44095a59d46df5beed722dd5e2fb962f74138"
+  
+  vue-router@^3.0.1:
+    version "3.0.1"
+    resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.1.tgz#d9b05ad9c7420ba0f626d6500d693e60092cc1e9"
+  
   vue-style-loader@^4.0.1:
     version "4.1.0"
     resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.0.tgz#7588bd778e2c9f8d87bfc3c5a4a039638da7a863"
@@ -6397,7 +6412,7 @@ Lockfile:
       hash-sum "^1.0.2"
       loader-utils "^1.0.2"
   
-  vue-template-compiler@^2.5.13:
+  vue-template-compiler@^2.5.13, vue-template-compiler@^2.5.16:
     version "2.5.16"
     resolved "https://registry.yarnpkg.com/vue-template-compiler/-/vue-template-compiler-2.5.16.tgz#93b48570e56c720cdf3f051cc15287c26fbd04cb"
     dependencies:
@@ -6673,10 +6688,11 @@ Lockfile:
       strip-indent "^2.0.0"
 
 Trace: 
-  Error: `install` has been replaced with `add` to add new dependencies. Run "yarn add vue-material" instead.
+  Error: Couldn't find package "element.io" on the "npm" registry.
       at new MessageError (/usr/local/lib/node_modules/yarn/lib/cli.js:186:110)
-      at Object.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:21987:13)
+      at NpmResolver.<anonymous> (/usr/local/lib/node_modules/yarn/lib/cli.js:51625:15)
       at Generator.next (<anonymous>)
       at step (/usr/local/lib/node_modules/yarn/lib/cli.js:98:30)
       at /usr/local/lib/node_modules/yarn/lib/cli.js:109:13
       at <anonymous>
+      at process._tickCallback (internal/process/next_tick.js:160:7)
