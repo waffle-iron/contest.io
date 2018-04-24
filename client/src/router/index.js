@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 const routerOptions = [
   { path: '/', component: 'Home' },
+  { path: '/dashboard', component: 'ContestDashboard' }, // TODO: replace mockout with real dashboard
   { path: '*', component: '404Error' }
 ]
 
