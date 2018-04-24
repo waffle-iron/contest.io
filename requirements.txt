@@ -28,8 +28,4 @@ six==1.11.0
 SQLAlchemy==1.2.6
 urllib3==1.22
 Werkzeug==0.14.1
-<<<<<<< HEAD
-wwrapt==1.10.11
-=======
 wrapt==1.10.11
->>>>>>> 41c7ea96c1fcd62cb5d0c039ef2d27c9a543bc83
