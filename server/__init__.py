@@ -21,6 +21,8 @@ def index():
         return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
 
+# TODO: Query with tags as parameters
+# TODO: Database Connection - #15, #16, #17
 @app.route('/api/problems')
 def problemset():
     return json.dumps(getProblems('graphs'))
