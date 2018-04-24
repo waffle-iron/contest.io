@@ -4,13 +4,13 @@
 
 Initialize VirtualEnv 
 ```
-virtualenv venv
+virtualenv -p python3 venv
 ```
 
 Activate it (must be done in every new shell in the working directory) and install the python dependencies
 ```
 source venv/bin/activate
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Install npm dependencies
@@ -23,7 +23,7 @@ cd client/ && yarn install
 
 Run the flask setup
 ```
-pip install -e .
+pip3 install -e .
 ```
 
 Start Vue Development Server and Flask Backend
