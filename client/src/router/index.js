@@ -1,9 +1,9 @@
-import Vue from 'vue';
-import Router from 'vue-router';
+import Vue from 'vue'
+import Router from 'vue-router'
 
 const routerOptions = [
   { path: '/', component: 'Home' },
-  { path: '*', component: '404Error'},
+  { path: '*', component: '404Error' }
 ]
 
 const routes = routerOptions.map(route => {
