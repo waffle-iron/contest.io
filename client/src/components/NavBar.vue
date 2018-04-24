@@ -6,12 +6,12 @@
       <!-- Side Bar Icon -->
       <v-toolbar-side-icon></v-toolbar-side-icon>
 
-      <v-toolbar-title>Contest.io</v-toolbar-title>
+      <router-link to="/" tag="v-toolbar-title" class="titlenavbar">Contest.io</router-link>
 
       <v-spacer></v-spacer>
 
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat>Dashboard</v-btn>
+        <v-btn to="/dashboard" flat>Dashboard</v-btn>
         <v-btn flat>Login</v-btn>
       </v-toolbar-items>
 
@@ -31,5 +31,7 @@ export default {
 </script>
 
 <style scoped>
-
+.titlenavbar:hover {
+  cursor: pointer;
+}
 </style>
