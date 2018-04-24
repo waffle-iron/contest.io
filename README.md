@@ -2,7 +2,7 @@
 
 ## Setup
 
-Initialize VirtualEnv 
+Initialize VirtualEnv
 ```
 virtualenv venv
 ```
