@@ -11,7 +11,7 @@
       <v-spacer></v-spacer>
 
       <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn to="/dashboard" flat>Dashboard</v-btn>
+        <v-btn to="/contest/1" flat>Dashboard</v-btn>
         <v-btn flat>Login</v-btn>
       </v-toolbar-items>
 
