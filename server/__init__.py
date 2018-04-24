@@ -1,6 +1,7 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from werkzeug.routing import BaseConverter
-import requests
+from .api.problems import getProblems
+import requests, json
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -19,6 +20,10 @@ def index():
     if app.debug:
         return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
+
+@app.route('/api/problems')
+def problemset():
+    return json.dumps(getProblems('graphs'))
 
 @app.route('/sockjs-node/<path>')
 def sockjs():
