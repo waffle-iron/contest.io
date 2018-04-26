@@ -16,8 +16,12 @@ class Tasks(EndpointInterface):
     def get(self, tags=None):
         try:
             if tags != None:
-                self.rawdata = requests.get(
-                    '{}/problemset.problems'.format(CODEFORCES_BASE_URL), params=dict(tags=str(tags))).json()
+                self.rawdata = (requests.get(
+                                            '{}/problemset.problems'.format(CODEFORCES_BASE_URL),
+                                            params=dict(tags=str(tags)),
+                                            allow_redirects=False,
+                                            stream=True)
+                                        .json())
             else:
                 self.rawdata = requests.get(
                     '{}/problemset.problems'.format(CODEFORCES_BASE_URL)).json()
@@ -36,17 +40,14 @@ class Tasks(EndpointInterface):
             print(e)
 
     def insertToDatabase(self):
-        try:
-            if self.problems:
-                for problem in self.problems:
-                    contestId, index, name, tags = problem['contestId'], problem[
-                        'index'], problem['name'], problem['tags']
-                    url = "http://codeforces.com/problemset/problem/{}/{}".format(
-                        contestId, index)
-                    models.insert_task(
-                        name,
-                        tags,
-                        url,
-                    )
-        except Exception as e:
-            print(e)
+        if self.problems:
+            for problem in self.problems:
+                contestId, index, name, tags = problem['contestId'], problem[
+                    'index'], problem['name'], problem['tags']
+                url = "http://codeforces.com/problemset/problem/{}/{}".format(
+                    contestId, index)
+                models.insert_task(
+                    name,
+                    tags,
+                    url,
+                )
