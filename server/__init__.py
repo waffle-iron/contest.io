@@ -1,8 +1,9 @@
 from flask import Flask, render_template, jsonify, request
 from werkzeug.routing import BaseConverter
-import server.api.APIConnector as APIConnector
 import requests
 import json
+import server.api.APIConnector as APIConnector
+import server.database.models as models
 
 
 class RegexConverter(BaseConverter):
@@ -22,22 +23,34 @@ TasksEndpoint = APIConnector.Tasks()
 
 @app.route('/')
 def index():
+    
     if app.debug:
         return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
 
 
-# TODO: Database Connection - #15, #16, #17
+# TODO: Database Connection - #16, #17
 @app.route('/api/tasks')
 def api_tasks():
+    returnJSON = None
+
     def queryparam_tags(x): return request.args.get(
         'tags') if request.args.get('tags') else None
-    respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
-    return json.dumps(respond_rawdata)
+
+    tasks_in_database = models.select_task()
+
+    if tasks_in_database is not None:
+        returnJSON = tasks_in_database
+    else:
+        respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
+        returnJSON = respond_rawdata
+
+    return json.dumps(returnJSON)
 
 
 @app.route('/sockjs-node/<path>')
 def sockjs():
+
     if app.debug:
         return requests.post('http://localhost:3000/sockjs-node/{}'.format(path))
     return render_template("index.html")
@@ -46,6 +59,7 @@ def sockjs():
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
+
     if app.debug:
         return requests.get('http://localhost:3000/{}'.format(path)).text
     return render_template("index.html")
