@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from werkzeug.routing import BaseConverter
 import .api.APIConnector
 import requests
@@ -26,8 +26,9 @@ def index():
 
 
 @app.route('/api/tasks')
-def taskslist():
-    return json.dumps(APIConnector.Tasks.get(tags='graphs'))
+def api_tasks():
+    lambda queryparam_tags: request.args.get('tags') if request.args.get('tags') else None
+    return json.dumps(APIConnector.Tasks.get(tags=queryparam_tags))
 
 
 @app.route('/sockjs-node/<path>')
