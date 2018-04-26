@@ -15,7 +15,7 @@ create table if not exists in_group (
 
 create table if not exists Contest (
     contestid integer primary key autoincrement,
-    contestcode integer not null,
+    contestcode text not null,
     contestname text not null,
     date_start datetime not null,
     date_end datetime,
@@ -34,5 +34,6 @@ create table if not exists contains_task (
     contest integer not null,
     task integer not null,
     foreign key(contest) references Contest(contestid),
-    foreign key(task) references Task(taskid)
+    foreign key(task) references Task(taskid),
+    primary key (contest, task)
 );
