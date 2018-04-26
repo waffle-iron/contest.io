@@ -9,13 +9,13 @@
             <!-- Task LIst -->
             <v-subheader class="display-1" style="margin-top: 2% !important;">Contest 1</v-subheader>
 
-            <v-avatar class="grey lighten-4 avatar" size="35px">
+            <router-link tag="v-avatar" to="/profile/1" class="grey lighten-4 avatar vlink" size="35px">
               <img src="https://vuetifyjs.com/static/doc-images/lists/1.jpg" alt="avatar">
               <div><v-subheader style="width: 200px;">Herr Hörner</v-subheader></div>
-            </v-avatar>
+            </router-link>
             <v-expansion-panel>
 
-             <v-expansion-panel-content v-for="item in items" :key="i">
+             <v-expansion-panel-content v-for="item in items" :key="item.title">
 
                <div slot="header">{{ item.title }}</div>
 
@@ -98,5 +98,9 @@ export default {
 
 .chiptag {
   margin-left: -70%;
+}
+
+.vlink {
+  cursor: pointer;
 }
 </style>

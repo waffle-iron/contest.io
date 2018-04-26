@@ -25,9 +25,11 @@ def index():
     return render_template("index.html")
 
 
+# TODO: Database Connection - #15, #16, #17
 @app.route('/api/tasks')
 def api_tasks():
-    lambda queryparam_tags: request.args.get('tags') if request.args.get('tags') else None
+    lambda queryparam_tags: request.args.get(
+        'tags') if request.args.get('tags') else None
     return json.dumps(APIConnector.Tasks.get(tags=queryparam_tags))
 
 
