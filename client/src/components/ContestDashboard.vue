@@ -13,7 +13,7 @@
               <img src="https://vuetifyjs.com/static/doc-images/lists/1.jpg" alt="avatar">
               <div><v-subheader style="width: 200px;">Herr Hörner</v-subheader></div>
             </router-link>
-            <v-expansion-panel>
+            <v-expansion-panel popout>
 
              <v-expansion-panel-content v-for="item in items" :key="item.title">
 
@@ -25,7 +25,7 @@
 
                 <!-- Tags -->
                 <div class="text-xs-center chiptag">
-                  <v-chip close small>Bruteforce</v-chip>
+                  <v-chip small>Bruteforce</v-chip>
                 </div>
 
                 <!-- TODO: add link to codeforces -->
