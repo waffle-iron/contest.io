@@ -1,7 +1,9 @@
 from flask import Flask, render_template, jsonify
 from werkzeug.routing import BaseConverter
-from .api.problems import getProblems
-import requests, json
+import .api.APIConnector
+import requests
+import json
+
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -10,10 +12,11 @@ class RegexConverter(BaseConverter):
 
 
 app = Flask(__name__,
-            static_folder = "../client/dist/static",
-            template_folder = "../client/dist")
+            static_folder="../client/dist/static",
+            template_folder="../client/dist")
 
 app.url_map.converters['regex'] = RegexConverter
+
 
 @app.route('/')
 def index():
@@ -21,9 +24,11 @@ def index():
         return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
 
-@app.route('/api/problems')
-def problemset():
-    return json.dumps(getProblems('graphs'))
+
+@app.route('/api/tasks')
+def taskslist():
+    return json.dumps(APIConnector.Tasks.get(tags='graphs'))
+
 
 @app.route('/sockjs-node/<path>')
 def sockjs():
@@ -31,10 +36,10 @@ def sockjs():
         return requests.post('http://localhost:3000/sockjs-node/{}'.format(path))
     return render_template("index.html")
 
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
     if app.debug:
         return requests.get('http://localhost:3000/{}'.format(path)).text
     return render_template("index.html")
-    

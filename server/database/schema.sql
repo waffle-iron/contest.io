@@ -26,6 +26,7 @@ create table if not exists Contest (
 
 create table if not exists Task (
     taskid integer primary key autoincrement,
+    taskname text not null,
     -- Json-stringified tags array
     tasktags text not null
 );
