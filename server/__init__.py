@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from werkzeug.routing import BaseConverter
-import .api.APIConnector
+import server.api.APIConnector as APIConnector
 import requests
 import json
 
@@ -17,6 +17,8 @@ app = Flask(__name__,
 
 app.url_map.converters['regex'] = RegexConverter
 
+TasksEndpoint = APIConnector.Tasks()
+
 
 @app.route('/')
 def index():
@@ -28,9 +30,10 @@ def index():
 # TODO: Database Connection - #15, #16, #17
 @app.route('/api/tasks')
 def api_tasks():
-    lambda queryparam_tags: request.args.get(
+    def queryparam_tags(x): return request.args.get(
         'tags') if request.args.get('tags') else None
-    return json.dumps(APIConnector.Tasks.get(tags=queryparam_tags))
+    respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
+    return json.dumps(respond_rawdata)
 
 
 @app.route('/sockjs-node/<path>')
