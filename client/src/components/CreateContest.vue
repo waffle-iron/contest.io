@@ -9,7 +9,12 @@
           <!-- Add tasks -->
           <v-flex xs10 id="taskselection">
             <!-- TODO: Add Filter and Search options -->
-            <v-text-field prepend-icon="search" v-model="searchtitle" label="Search by name" solo-inverted class="mx-0 search" clearable="true" flat></v-text-field>
+            <div style="width: 100%;">
+              <v-text-field prepend-icon="search" v-model="searchtitle" label="Search by name" solo-inverted class="mx-0 search" :clearable="true" flat></v-text-field>
+              <v-menu style="margin-left: 84.5%; margin-top: -40px;">
+                <v-btn color="primary" dark slot="activator">Filter by tag</v-btn>
+              </v-menu>
+            </div>
             <!-- container for task selection -->
             <div style="height: 320px; overflow: scroll;">
               <v-list>
@@ -24,7 +29,7 @@
 
                      <v-list-tile-action>
                        <!-- <v-btn absolute fab center small color="light-green accent-3"> -->
-                         <v-icon>add</v-icon>
+                         <v-icon @click="addTask(item.id)">add</v-icon>
                        <!-- </v-btn> -->
                      </v-list-tile-action>
 
@@ -47,7 +52,7 @@
             <v-subheader style="margin-top: 5%;"> Tasks Selected so far </v-subheader>
             <v-expansion-panel popout>
 
-             <v-expansion-panel-content v-for="item in tasks" :key="item.title">
+             <v-expansion-panel-content v-for="item in tasks" :key="item.id">
 
                <div slot="header">{{ item.title }}</div>
 
@@ -62,7 +67,7 @@
 
                 <!-- TODO: add link to codeforces -->
                 <v-card-actions>
-                  <v-btn flat color="red" to="https://www.codeforces.org">Remove</v-btn>
+                  <v-btn flat color="red" @click="removeTask(item.id)">Remove</v-btn>
                   <v-btn flat color="orange" to="https://www.codeforces.org">Solve</v-btn>
                 </v-card-actions>
 
@@ -122,12 +127,26 @@ export default {
       ],
     tasks: [
       { title: 'Task 1: Get your life together', tags: ['Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees'] },
-      { title: 'Task 2: Procrastinate Task 1 until your life is over', tags: ['Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees'] },
-      { title: 'Task 3: Drink bleech to get over your depression', tags: ['Bruteforce', 'Binary Trees'] }
+      { title: 'Task 2: Procrastinate Task 1 until your life is over', tags: ['Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees', 'Bruteforce', 'Binary Trees'] }
     ]
     }
   },
+  methods: {
+    // This method moves task object from items array to tasks array
+    addTask(id) {
+      var temp = this.items.find(x => x.id === id)
+      this.items.splice(this.items.indexOf(temp), 1);
+      this.tasks.push(temp);
+    },
+    // This method moves task object from tasks array to items array
+    removeTask(id) {
+      var temp = this.tasks.find(x => x.id === id)
+      this.tasks.splice(this.tasks.indexOf(temp), 1);
+      this.items.push(temp);
+    }
+  },
   computed: {
+    // This filters tasks by title
     filteredItems() {
       return this.items.filter((i) => {
         if(this.searchtitle)
@@ -152,6 +171,6 @@ export default {
 
 .search {
   width: 45%;
-  margin-bottom: 5px;
+  margin-bottom: -15px;
 }
 </style>
