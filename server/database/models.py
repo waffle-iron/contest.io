@@ -1,6 +1,6 @@
 import sqlite3 as sql
 import json
-import secrets
+import secrets 
 import datetime
 
 DATABASE_PATH = "server/database/database.db"
@@ -41,12 +41,12 @@ def insert_user(name, usertype, oauth_token):
         dbcon.commit()
 
 
-def select_task(params=()):
+def select_task(params=(), conditions=()):
     with sql.connect(DATABASE_PATH) as dbcon:
         cur = dbcon.cursor()
         if cur.rowcount == 0:
             return None
-        if params == ():
+        if params == () and conditions == ():
             queryresult = cur.execute("SELECT * FROM Task")
         else:
             queryString = "SELECT"
@@ -54,7 +54,13 @@ def select_task(params=()):
             for i in range(len(params) - 1):
                 queryString += "{},"
             queryString += "{} FROM Task"
-            queryresult = cur.execute(queryString.format(params))
+            queryString = queryString.format(params)
+            queryString += "WHERE"
+            for i in range(len(conditions)):
+                queryString += "{} AND"
+            queryString = queryString[:-4]
+            queryString = queryString.format(conditions)            
+            queryresult = cur.execute()
 
     response = queryresult.fetchall()
     if len(response) == 0:
