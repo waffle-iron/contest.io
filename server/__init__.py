@@ -29,23 +29,26 @@ def index():
     return render_template("index.html")
 
 
-# TODO: Database Connection - #16, #17
-@app.route('/api/tasks')
+@app.route('/api/tasks', methods=['GET', 'POST'])
 def api_tasks():
-    returnJSON = None
+    if request.method == 'GET':
+        returnJSON = None
 
-    def queryparam_tags(x): return request.args.get(
-        'tags') if request.args.get('tags') else None
+        def queryparam_tags(x): return request.args.get(
+            'tags') if request.args.get('tags') else None
+        
+        tasks_in_database = models.select_task()
 
-    tasks_in_database = models.select_task()
-
-    if tasks_in_database is not None:
-        returnJSON = tasks_in_database
+        if tasks_in_database is not None:
+            returnJSON = tasks_in_database
+        else:
+            respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
+            returnJSON = respond_rawdata
+        
+        # @FRONT-END tasktags have to be parsed -> JSON.parse
+        return json.dumps(returnJSON)
     else:
-        respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
-        returnJSON = respond_rawdata
-
-    return json.dumps(returnJSON)
+        return None
 
 
 @app.route('/sockjs-node/<path>')
