@@ -60,7 +60,7 @@ def select_task(params=(), conditions=()):
                 queryString += "{} AND"
             queryString = queryString[:-4]
             queryString = queryString.format(conditions)            
-            queryresult = cur.execute()
+            queryresult = cur.execute(queryString)
 
     response = queryresult.fetchall()
     if len(response) == 0:
