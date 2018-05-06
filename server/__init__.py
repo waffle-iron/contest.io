@@ -2,8 +2,9 @@ from flask import Flask, render_template, jsonify, request, g, session, redirect
 from werkzeug.routing import BaseConverter
 import requests, json
 from flask_github import GitHub
-from .api.problems import getProblems
-import .settings as settings
+import server.api.APIConnector as APIConnector
+import server.database.models as models
+import server.settings as settings
 
 class RegexConverter(BaseConverter):
     def __init__(self, url_map, *items):
@@ -20,6 +21,8 @@ app.config['GITHUB_CLIENT_SECRET'] = settings.GITHUB_CLIENT_SECRET
 
 app.url_map.converters['regex'] = RegexConverter
 
+# Set Endpoints
+TasksEndpoint = APIConnector.Tasks()
 
 # Github-Flask
 github = Github(app)
@@ -27,6 +30,7 @@ github = Github(app)
 
 @app.route('/')
 def index():
+    
     if app.debug:
         return requests.get('http://localhost:3000/index.html').text
     return render_template("index.html")
@@ -52,22 +56,40 @@ def auth_GithubCallback(auth_token):
     db_session.commit()
     return redirect(next_url)
 
-# TODO: Query with tags as parameters
-# TODO: Database Connection - #15, #16, #17
-@app.route('/api/problems')
-def problemset():
-    return json.dumps(getProblems('graphs'))
+@app.route('/api/tasks', methods=['GET', 'POST'])
+def api_tasks():
+    if request.method == 'GET':
+        returnJSON = None
+
+        def queryparam_tags(x): return request.args.get(
+            'tags') if request.args.get('tags') else None
+        
+        tasks_in_database = models.select_task()
+
+        if tasks_in_database is not None:
+            returnJSON = tasks_in_database
+        else:
+            respond_rawdata = TasksEndpoint.get(tags=queryparam_tags(None))
+            returnJSON = respond_rawdata
+        
+        # @FRONT-END tasktags have to be parsed -> JSON.parse
+        return json.dumps(returnJSON)
+    else:
+        return None
+
 
 @app.route('/sockjs-node/<path>')
 def sockjs():
+
     if app.debug:
         return requests.post('http://localhost:3000/sockjs-node/{}'.format(path))
     return render_template("index.html")
 
+
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def catch_all(path):
+
     if app.debug:
         return requests.get('http://localhost:3000/{}'.format(path)).text
     return render_template("index.html")
-    
