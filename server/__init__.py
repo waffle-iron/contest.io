@@ -48,25 +48,46 @@ def index():
 @app.route('/github-login')
 def auth_GithubLogin():
     if session.get('user_id', None) is None:
-    return github.authorize()
+        return github.authorize()
+    else:
+        return 'Already logged in'
 
 
-# TODO: Github Callback
+@app.route('/github-logout')
+def auth_GithubLogout():
+    session.pop('user_id', None)
+    return redirect(url_for('index'))
+
+@github.access_token_getter
+def token_getter():
+    user = g.user
+    if user is not None:
+        return user[settings.DB_COLUMNS.USER_OAUTH_TOKEN]
+
 @app.route('/github-callback')
 @github.authorized_handler
-def auth_GithubCallback(auth_token):
+def auth_GithubCallback(oauth_token):
     next_url = request.args.get('next') or url_for('index')
-    # if oauth_token is None:
-    #     flash("Authorization failed.")
-    #     return redirect(next_url)
+    if oauth_token is None:
+        flash("Authorization failed.")
+        return redirect(next_url)
 
-    # user = models.select_user(params=())
-    # if user is None:
-    #     user = User(oauth_token)
-    #     db_session.add(user)
+    userData = github.get('user')
+    userLoginName = userData['login']
 
-    # user.github_access_token = oauth_token
-    # db_session.commit()
+    user = models.select_user(conditions=(
+        "{}={}".format(settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)))
+    if user is None:
+        models.insert_user(
+            userLoginName, settings.NORMAL_USERTYPE, oauth_token)
+
+    # models.update_user(
+    #     updatedValues=("{}={}".format(
+    #         settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)),
+    #     set_conditions=("{}={}".format(
+    #         settings.DB_COLUMNS.USER_USERNAME, 
+    #     )))
+    session['user_id'] = user.id
     return redirect(next_url)
 
 
@@ -80,7 +101,7 @@ def api_tasks():
 
         if queryparam_tags(None) != None:
             tasks_in_database = models.select_task(conditions=(
-                "tasktags LIKE '%{}%'".format(queryparam_tags(None))))
+                "{} LIKE '%{}%'".format(settings.DB_COLUMNS.TASK_TASKTAGS, queryparam_tags(None))))
 
         if tasks_in_database is not None:
             returnJSON = tasks_in_database
