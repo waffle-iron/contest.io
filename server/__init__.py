@@ -95,7 +95,7 @@ def api_tasks():
 
 
 @app.route('/sockjs-node/<path>')
-def sockjs():
+def sockjs(path):
 
     if app.debug:
         return requests.post('http://localhost:3000/sockjs-node/{}'.format(path))
