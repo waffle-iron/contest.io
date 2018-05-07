@@ -1,8 +1,8 @@
-from flask import Flask, render_template, jsonify, request, g, session, redirect, url_for
+from flask import Flask, render_template, jsonify, request, g, session, redirect, url_for, flash
 from werkzeug.routing import BaseConverter
 import requests
 import json
-from flask_github import GitHub
+import flask_github
 import server.api.APIConnector as APIConnector
 import server.database.models as models
 import server.settings as settings
@@ -27,7 +27,15 @@ app.url_map.converters['regex'] = RegexConverter
 TasksEndpoint = APIConnector.Tasks()
 
 # Github-Flask
-github = Github(app)
+github = flask_github.GitHub(app)
+
+
+@app.before_request
+def before_request():
+    g.user = None
+    if 'user_id' in session:
+        g.user = models.select_user(conditions=(
+            "{}={}".format(settings.DB_COLUMNS.USER_USERID, session['user_id'])))
 
 
 @app.route('/')
@@ -39,6 +47,7 @@ def index():
 
 @app.route('/github-login')
 def auth_GithubLogin():
+    if session.get('user_id', None) is None:
     return github.authorize()
 
 
