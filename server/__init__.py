@@ -92,7 +92,7 @@ def auth_GithubCallback(oauth_token):
 
 
 @app.route('/user')
-def user():
+def auth_user():
     # update inserted User
     userData = github.get('user')
     userLoginName = userData['login']
