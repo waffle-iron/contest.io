@@ -20,6 +20,8 @@ app = Flask(__name__,
 # Flask app config
 app.config['GITHUB_CLIENT_ID'] = settings.GITHUB_CLIENT_ID
 app.config['GITHUB_CLIENT_SECRET'] = settings.GITHUB_CLIENT_SECRET
+app.secret_key = settings.SECRET_KEY
+app.config['SESSION_TYPE'] = 'filesystem'
 
 app.url_map.converters['regex'] = RegexConverter
 
@@ -34,8 +36,8 @@ github = flask_github.GitHub(app)
 def before_request():
     g.user = None
     if 'user_id' in session:
-        g.user = models.select_user(conditions=(
-            "{}={}".format(settings.DB_COLUMNS.USER_USERID, session['user_id'])))
+        g.user = models.select_user(params=('*'), conditions=(
+            "{}=\"{}\"".format(settings.DB_COLUMNS.USER_USERID, session['user_id'])))
 
 
 @app.route('/')
@@ -56,13 +58,16 @@ def auth_GithubLogin():
 @app.route('/github-logout')
 def auth_GithubLogout():
     session.pop('user_id', None)
+    session.pop('oauth_token', None)
     return redirect(url_for('index'))
+
 
 @github.access_token_getter
 def token_getter():
     user = g.user
     if user is not None:
-        return user[settings.DB_COLUMNS.USER_OAUTH_TOKEN]
+        return user[-1]
+
 
 @app.route('/github-callback')
 @github.authorized_handler
@@ -72,23 +77,53 @@ def auth_GithubCallback(oauth_token):
         flash("Authorization failed.")
         return redirect(next_url)
 
-    userData = github.get('user')
-    userLoginName = userData['login']
-
-    user = models.select_user(conditions=(
-        "{}={}".format(settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)))
+    user = models.select_user(params=('*'), conditions=(
+        "{}=\"{}\"".format(settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)))
     if user is None:
         models.insert_user(
-            userLoginName, settings.NORMAL_USERTYPE, oauth_token)
-
-    # models.update_user(
-    #     updatedValues=("{}={}".format(
-    #         settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)),
-    #     set_conditions=("{}={}".format(
-    #         settings.DB_COLUMNS.USER_USERNAME, 
-    #     )))
-    session['user_id'] = user.id
+            'defaultUser', settings.NORMAL_USERTYPE, oauth_token)
+    user = models.select_user(params=('*'), conditions=(
+        "{}=\"{}\"".format(settings.DB_COLUMNS.USER_OAUTH_TOKEN, oauth_token)))
+    
+    session['user_id'] = user[0]
+    session.pop('oauth_token', None)
+    session['oauth_token'] = oauth_token
     return redirect(next_url)
+
+
+@app.route('/user')
+def user():
+    # update inserted User
+    userData = github.get('user')
+    userLoginName = userData['login']
+    
+    # check if user already exists
+    user = models.select_user(params=('*'), conditions=(
+        "{}=\"{}\"".format(settings.DB_COLUMNS.USER_USERNAME, userLoginName)))
+    if user == None:
+        models.update_user(
+            updatedValues=("{}=\"{}\"".format(
+                settings.DB_COLUMNS.USER_USERNAME, userLoginName)),
+            set_conditions=("{}=\"{}\"".format(
+                settings.DB_COLUMNS.USER_USERID,
+                session.get('user_id', None)
+            )))
+    else:
+        models.delete_user(delete_conditions=(
+            "{}=\"{}\"".format(settings.DB_COLUMNS.USER_USERNAME, 'defaultUser')
+        ))
+        models.update_user(
+            updatedValues=("{}=\"{}\"".format(
+                settings.DB_COLUMNS.USER_OAUTH_TOKEN, session.get('oauth_token', None))),
+            set_conditions=("{}=\"{}\"".format(
+                settings.DB_COLUMNS.USER_USERNAME,
+                userLoginName
+            )))
+        user = models.select_user(params=('*'), conditions=(
+            "{}=\"{}\"".format(settings.DB_COLUMNS.USER_USERNAME, userLoginName)))
+        session.pop('user_id', None)
+        session['user_id'] = user[0]
+    return str(userData)
 
 
 @app.route('/api/tasks', methods=['GET', 'POST'])
@@ -99,8 +134,10 @@ def api_tasks():
         def queryparam_tags(x): return request.args.get(
             'tags') if request.args.get('tags') else None
 
-        if queryparam_tags(None) != None:
-            tasks_in_database = models.select_task(conditions=(
+        if queryparam_tags(None) == None:
+            tasks_in_database = models.select_task(params=('*'))
+        else:
+            tasks_in_database = models.select_task(params=('*'), conditions=(
                 "{} LIKE '%{}%'".format(settings.DB_COLUMNS.TASK_TASKTAGS, queryparam_tags(None))))
 
         if tasks_in_database is not None:
