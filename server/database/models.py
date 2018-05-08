@@ -38,7 +38,7 @@ def select_task(params=(), conditions=()):
                 for paramString in params:
                     queryString += " {},".format(paramString)
                 queryString = queryString[:-1]
-                queryString += " FROM User"
+                queryString += " FROM Task"
             if conditions != ():
                 queryString += " WHERE"
                 for conditionString in conditions:
