@@ -2,9 +2,14 @@
 
 ## Setup
 
+#### Pre-Requirements
+- yarn 
+- virtualenv
+- sqlite3
+
 Initialize VirtualEnv
 ```
-virtualenv -p python3 venv
+virtualenv -p python3.6 venv
 ```
 
 Activate it (must be done in every new shell in the working directory) and install the python dependencies
@@ -17,6 +22,11 @@ Install npm dependencies
 ```
 yarn install
 cd client/ && yarn install
+```
+
+Create database
+```
+sqlite3 server/database/database.db < server/database/schema.sql
 ```
 
 ## Running

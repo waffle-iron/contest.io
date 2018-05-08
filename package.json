@@ -10,6 +10,6 @@
     "concurrently": "^3.5.1"
   },
   "scripts": {
-    "dev": "concurrently \"cd client/ && yarn serve\" \"FLASK_APP=server FLASK_DEBUG=1 flask run\""
+    "dev": "concurrently \"cd client/ && yarn serve\" \"FLASK_APP=server FLASK_DEBUG=1 flask run --with-threads\""
   }
 }
