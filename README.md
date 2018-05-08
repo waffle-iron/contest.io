@@ -1,3 +1,4 @@
+[![Waffle.io - Columns and their card count](https://badge.waffle.io/flxwu/contest.io.png?columns=all)](https://waffle.io/flxwu/contest.io?utm_source=badge)
 # contest.io
 
 ## Setup
