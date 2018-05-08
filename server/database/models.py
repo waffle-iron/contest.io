@@ -26,17 +26,24 @@ def select_task(params=(), conditions=()):
         if params == () and conditions == ():
             queryresult = cur.execute("SELECT * FROM Task")
         else:
-            queryString = "SELECT"
-            # add a format-placeholder for every parameter
-            for i in range(len(params) - 1):
-                queryString += "{},"
-            queryString += "{} FROM Task"
-            queryString = queryString.format(params)
-            queryString += "WHERE"
-            for i in range(len(conditions)):
-                queryString += "{} AND"
-            queryString = queryString[:-4]
-            queryString = queryString.format(conditions)
+            # convert one-value tuples to real tuples
+            if not isinstance(params, tuple):
+                params = (params,)
+            if not isinstance(conditions, tuple):
+                conditions = (conditions,)
+
+            if params != ():
+                queryString = "SELECT"
+                # add a format-placeholder for every parameter
+                for paramString in params:
+                    queryString += " {},".format(paramString)
+                queryString = queryString[:-1]
+                queryString += " FROM User"
+            if conditions != ():
+                queryString += " WHERE"
+                for conditionString in conditions:
+                    queryString += " {} AND".format(conditionString)
+                queryString = queryString[:-4]
             queryresult = cur.execute(queryString)
 
     response = queryresult.fetchall()
@@ -77,21 +84,28 @@ def select_user(params=(), conditions=()):
         if params == () and conditions == ():
             queryresult = cur.execute("SELECT * FROM User")
         else:
-            queryString = "SELECT"
-            # add a format-placeholder for every parameter
-            for i in range(len(params) - 1):
-                queryString += "{},"
-            queryString += "{} FROM User"
-            queryString = queryString.format(params)
-            queryString += "WHERE"
-            for i in range(len(conditions)):
-                queryString += "{} AND"
-            queryString = queryString[:-4]
-            queryString = queryString.format(conditions)
+            # convert one-value tuples to real tuples
+            if not isinstance(params, tuple):
+                params = (params,)
+            if not isinstance(conditions, tuple):
+                conditions = (conditions,)
+
+            if params != ():
+                queryString = "SELECT"
+                # add a format-placeholder for every parameter
+                for paramString in params:
+                    queryString += " {},".format(paramString)
+                queryString = queryString[:-1]
+                queryString += " FROM User"
+            if conditions != ():
+                queryString += " WHERE"
+                for conditionString in conditions:
+                    queryString += " {} AND".format(conditionString)
+                queryString = queryString[:-4]
             queryresult = cur.execute(queryString)
 
-    response = queryresult.fetchall()
-    if len(response) == 0:
+    response = queryresult.fetchone()
+    if not response:
         return None
     else:
         return response
@@ -103,16 +117,42 @@ def update_user(updatedValues=(), set_conditions=()):
         if cur.rowcount == 0:
             return None
 
-        queryString = "UPDATE User SET"
-        # add a format-placeholder for every parameter
-        for i in range(len(updatedValues)):
-            queryString += "{},"
-        queryString = queryString[:-1]
-        queryString = queryString.format(updatedValues)
-        queryString += "WHERE"
-        for i in range(len(set_conditions)):
-            queryString += "{} AND"
-        queryString = queryString[:-4]
-        queryString = queryString.format(set_conditions)
+        if updatedValues == () and set_conditions == ():
+            return None
+        else:
+            # convert one-value tuples to real tuples
+            if not isinstance(updatedValues, tuple):
+                updatedValues = (updatedValues,)
+            if not isinstance(set_conditions, tuple):
+                set_conditions = (set_conditions,)
 
-        cur.execute(queryString)
+            if updatedValues != ():
+                queryString = "UPDATE User SET"
+                # add a format-placeholder for every parameter
+                for updateString in updatedValues:
+                    queryString += " {},".format(updateString)
+                queryString = queryString[:-1]
+            if set_conditions != ():
+                queryString += " WHERE"
+                for conditionString in set_conditions:
+                    queryString += " {} AND".format(conditionString)
+                queryString = queryString[:-4]
+            cur.execute(queryString)
+
+
+def delete_user(delete_conditions=()):
+    with sql.connect(DATABASE_PATH) as dbcon:
+        cur = dbcon.cursor()
+        if cur.rowcount == 0:
+            return None
+        if delete_conditions == ():
+            return None
+        else:
+            if not isinstance(delete_conditions, tuple):
+                delete_conditions = (delete_conditions,)
+
+            queryString = "DELETE FROM User WHERE"
+            for conditionString in delete_conditions:
+                queryString += " {} AND".format(conditionString)
+            queryString = queryString[:-4]
+            cur.execute(queryString)
