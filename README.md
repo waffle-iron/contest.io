@@ -47,3 +47,13 @@ _If you want to only serve the Frontend (not recommended)_
 ```
 cd client/ && yarn dev
 ```
+
+## .env Variables
+```
+GITHUB_CLIENT_ID=...
+GITHUB_CLIENT_SECRET=...
+SECRET_KEY=...
+```
+Replace the dots with your own variables. For the Github Client ID and Secret, register contest.io as a new Github OAuth application [here](https://github.com/settings/applications/new). You may name it something like 'contest.io-dev-YOUR_USERNAME'.
+
+The `SECRET_KEY` variable can be set to whatever you want.
